@@ -30,7 +30,7 @@ router.put(
 
 router.get(
   "/profile",
-  authenticateMobileJWT,
+  authenticateWebJWT,
   c(controller.getProfile, (req, res, next) => [req.user])
 );
 
