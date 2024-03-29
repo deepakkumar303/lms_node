@@ -23,5 +23,10 @@ router.put(
   celebrate(schema.updateSchema, schema.options),
   c(controller.update, (req, res, next) => [req.params, req.body])
 );
-
+router.get(
+  "/list",
+  authenticateAdminJWT,
+  celebrate(schema.getAllByParams, schema.options),
+  c(controller.getListAll, (req, res, next) => [req.query])
+);
 module.exports = router;

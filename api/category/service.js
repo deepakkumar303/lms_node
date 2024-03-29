@@ -9,11 +9,80 @@ const create = async (params) => {
 };
 
 const update = async (params, body) => {
-  const details = await Course.findOneAndUpdate({ category_id: params.category_id }, body);
+  const details = await Course.findOneAndUpdate(
+    { category_id: params.category_id },
+    body
+  );
   return details;
 };
 
+const list = async (params) => {
+  const result = await Course.aggregate([
+    {
+      $match: params.matchCondition2,
+    },
+    {
+      $lookup: {
+        from: "courseTopic",
+        let: {
+          courseId: "$course_id",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: ["$course_id", "$$courseId"],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        as: "course_topic_detail",
+      },
+    },
+    {
+      $lookup: {
+        from: "category",
+        let: {
+          categoryId: "$category_id",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: ["$category_id", "$$categoryId"],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        as: "category_detail",
+      },
+    },
+    {
+      $sort: params.sortCondition,
+    },
+    {
+      $facet: {
+        paginatedResults: params.paginatedCondition,
+        totalCount: [
+          {
+            $count: "count",
+          },
+        ],
+      },
+    },
+  ]);
+  return result;
+};
 module.exports = {
   create,
-  update
+  update,
+  list,
 };
