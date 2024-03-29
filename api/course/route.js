@@ -31,4 +31,11 @@ router.get(
   c(controller.getListAll, (req, res, next) => [req.query])
 );
 
+router.delete(
+  "/delete",
+  authenticateAdminJWT,
+  celebrate(schema.deleteSchema, schema.options),
+  c(controller.courseDelete, (req, res, next) => [req.body])
+);
+
 module.exports = router;

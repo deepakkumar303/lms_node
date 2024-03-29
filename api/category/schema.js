@@ -32,3 +32,9 @@ module.exports.getAllByParams = {
     offset: joi.number().required(),
   },
 };
+
+module.exports.deleteSchema = {
+  body: {
+    category_id: joi.string().required(),
+  },
+};

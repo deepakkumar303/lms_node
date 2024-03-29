@@ -19,6 +19,9 @@ const list = async (params) => {
       $match: params.matchCondition2,
     },
     {
+      $match: params.categoryTypeCond,
+    },
+    {
       $lookup: {
         from: "courseTopic",
         let: {
@@ -79,8 +82,22 @@ const list = async (params) => {
   return result;
 };
 
+const getDetail = async (params) => {
+  const result = await Course.aggregate([
+    {
+      $match: {
+        course_id: {
+          $eq: params.course_id,
+        },
+      },
+    },
+  ]);
+  return result;
+};
+
 module.exports = {
   create,
   update,
-  list
+  list,
+  getDetail
 };

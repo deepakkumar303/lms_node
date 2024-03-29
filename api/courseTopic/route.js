@@ -31,4 +31,19 @@ router.post(
   c(controller.addMulti, (req, res, next) => [req.params, req.body])
 );
 
+router.delete(
+  "/delete",
+  authenticateAdminJWT,
+  celebrate(schema.deleteSchema, schema.options),
+  c(controller.courseTopicDelete, (req, res, next) => [req.body])
+);
+
+router.get(
+  "/list",
+  authenticateAdminJWT,
+  celebrate(schema.getAllByParams, schema.options),
+  c(controller.getListAll, (req, res, next) => [req.query])
+);
+
+
 module.exports = router;

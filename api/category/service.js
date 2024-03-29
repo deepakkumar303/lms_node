@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
-const Course = require("./index");
+const Category = require("./index");
 
 const { ObjectId } = mongoose.Types;
 
 const create = async (params) => {
-  const details = await Course.create(params);
+  const details = await Category.create(params);
   return details;
 };
 
 const update = async (params, body) => {
-  const details = await Course.findOneAndUpdate(
+  const details = await Category.findOneAndUpdate(
     { category_id: params.category_id },
     body
   );
@@ -17,7 +17,7 @@ const update = async (params, body) => {
 };
 
 const list = async (params) => {
-  const result = await Course.aggregate([
+  const result = await Category.aggregate([
     {
       $match: params.matchCondition2,
     },
@@ -81,8 +81,23 @@ const list = async (params) => {
   ]);
   return result;
 };
+
+const getDetail = async (params) => {
+  const result = await Category.aggregate([
+    {
+      $match: {
+        category_id: {
+          $eq: params.category_id,
+        },
+      },
+    },
+  ]);
+  return result;
+};
+
 module.exports = {
   create,
   update,
   list,
+  getDetail,
 };

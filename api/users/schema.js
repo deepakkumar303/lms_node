@@ -31,6 +31,30 @@ module.exports.create = {
   }),
 };
 
+module.exports.createStudent = {
+  body: joi.object().keys({
+    first_name: joi.string().required(),
+    last_name: joi.string().required(),
+    dob: joi.date().iso().required(),
+    email: joi.string().email().required(),
+    mobile: joi.number().required(),
+    alternate_mobile: joi.number().required(),
+    role: joi.string().required(),
+    location: joi
+      .object({
+        address_line_1: joi.string().required(),
+        address_line_2: joi.string().required(),
+        city: joi.string().required(),
+        state: joi.string().required(),
+        country: joi.string().required(),
+        pin_code: joi.string().required(),
+      })
+      .required(),
+    doj: joi.date().iso().required(),
+    dol: joi.date().iso().required(),
+  }),
+};
+
 module.exports.updateSchema = {
   body: joi.object().keys({
     name: joi.string().optional(),

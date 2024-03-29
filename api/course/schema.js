@@ -50,9 +50,16 @@ module.exports.updateSchema = {
 module.exports.getAllByParams = {
   query: {
     search_string: joi.string().allow(null, "").optional(),
+    category_type: joi.string().allow(null, "").optional(),
     sortBy: joi.string().allow(null, "").required(),
     sortDir: joi.string().allow(null, "").required(),
     limit: joi.number().required(),
     offset: joi.number().required(),
+  },
+};
+
+module.exports.deleteSchema = {
+  body: {
+    course_id: joi.string().required(),
   },
 };

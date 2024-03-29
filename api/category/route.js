@@ -29,4 +29,12 @@ router.get(
   celebrate(schema.getAllByParams, schema.options),
   c(controller.getListAll, (req, res, next) => [req.query])
 );
+
+router.delete(
+  "/delete",
+  authenticateAdminJWT,
+  celebrate(schema.deleteSchema, schema.options),
+  c(controller.categoryDelete, (req, res, next) => [req.body])
+);
+
 module.exports = router;

@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require('uuid');
 const service = require("./service");
-const User = require("./index");
+const Course = require("./index");
 const utilsChecks = require("../../system/utils/checks");
 require("dotenv").config();
 
@@ -37,6 +37,23 @@ const getListAll = async (params) => {
   const paginatedCond = [];
   const limitCond = {};
   const skipCond = {};
+  const categoryTypeCond = {};
+  if (
+    params.category_type &&
+    !utilsChecks.isEmptyString(params.category_type) &&
+    !utilsChecks.isNull(params.category_type)
+  ) {
+    categoryTypeCond.$or = [];
+    categoryTypeCond.$or.push({
+      $or: [
+        {
+          $and: [
+            { category_id: { $eq: params.category_type } },
+          ],
+        },
+      ],
+    });
+  }
   if (
     params.search_string &&
     !utilsChecks.isEmptyString(params.search_string) &&
@@ -44,37 +61,17 @@ const getListAll = async (params) => {
   ) {
     matchCond2.$or = [];
     matchCond2.$or.push({
-      name: {
+      course_name: {
         $regex: params.search_string,
         $options: "i",
       },
     });
     matchCond2.$or.push({
-      mobile: {
+      course_description: {
         $regex: params.search_string,
         $options: "i",
       },
     });
-    matchCond2.$or.push({
-      address: {
-        $elemMatch: {
-          $regex: params.search_string,
-          $options: "i",
-        },
-      },
-    });
-    matchCond2.$or.push({
-      email: {
-        $regex: params.search_string,
-        $options: "i",
-      },
-    });
-    // matchCond2.$or.push({
-    //     'contact_bidders.bidder_name': {
-    //         $regex: params.search_string,
-    //         $options: 'i',
-    //     },
-    // });
   }
   const { sortBy } = params;
   const { sortDir } = params;
@@ -101,6 +98,7 @@ const getListAll = async (params) => {
     sortCondition: sortCond,
     paginatedCondition: paginatedCond,
     search_string: params.search_string,
+    categoryTypeCond: categoryTypeCond
   };
   // return facetParams
   const getList = await service.list(facetParams);
@@ -108,16 +106,31 @@ const getListAll = async (params) => {
     throw boom.notFound("No Data Found");
   }
   const result = {
-    message: "List Employee Details",
+    message: "List Course Details",
     detail: getList,
   };
   return result;
 };
 
-
+const courseDelete = async (params) => {
+  const reqParams = {
+    course_id: params.course_id,
+  }
+  const userDetail = await service.getDetail(reqParams);
+  if(userDetail.length === 0) {
+    throw boom.conflict("No data found");
+  }
+  await Course.findOneAndDelete({
+    course_id: params.course_id,
+  });
+  return {
+    message: "Course Successfully Deleted",
+  };
+};
 
 module.exports = {
   add,
   update,
-  getListAll
+  getListAll,
+  courseDelete
 };

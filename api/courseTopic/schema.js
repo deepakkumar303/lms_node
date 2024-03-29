@@ -47,3 +47,20 @@ module.exports.addMultiSchema = {
     course_id: joi.string().required(),
   },
 };
+
+module.exports.deleteSchema = {
+  body: {
+    course_topic_id: joi.string().required(),
+  },
+};
+
+module.exports.getAllByParams = {
+  query: {
+    search_string: joi.string().allow(null, "").optional(),
+    course_type: joi.string().allow(null, "").optional(),
+    sortBy: joi.string().allow(null, "").required(),
+    sortDir: joi.string().allow(null, "").required(),
+    limit: joi.number().required(),
+    offset: joi.number().required(),
+  },
+};

@@ -10,10 +10,17 @@ const schema = require("./schema");
 const controller = require("./controller");
 const authenticateMobileJWT = require("../../system/middleware/jwt-user-authenticate");
 const authenticateWebJWT = require("../../system/middleware/jwt-emp-authenticate");
+
 router.post(
   "/register",
   celebrate(schema.create, schema.options),
   c(controller.register, (req, res, next) => [req.body])
+);
+
+router.post(
+  "/create-student",
+  celebrate(schema.createStudent, schema.options),
+  c(controller.createStudent, (req, res, next) => [req.body])
 );
 
 router.post(

@@ -25,12 +25,32 @@ const getProfile = async (user) => {
 };
 
 const register = async (params) => {
-  const userDetail = await User.find({ mobile: params.mobile });
+  const userDetail = await User.find({ email: params.email });
   if (userDetail.length > 0) {
     throw boom.conflict("user already exists");
   }
   const { password } = params;
   const hashedPassword = await bcrypt.hash(password, 10);
+  params.password = hashedPassword;
+  params.is_active = true;
+  params.user_id = uuidv4();
+
+  const createUser = await service.create(params);
+  const result = {
+    detail: { createUser },
+    message: "Registered successfully.",
+  };
+  return result;
+};
+
+const createStudent = async (params) => {
+  const userDetail = await User.find({ email: params.email });
+  if (userDetail.length > 0) {
+    throw boom.conflict("user already exists");
+  }
+  const { mobile } = params;
+  console.log('params', params);
+  const hashedPassword = await bcrypt.hash(mobile.toString(), 10);
   params.password = hashedPassword;
   params.is_active = true;
   params.user_id = uuidv4();
@@ -237,7 +257,7 @@ const getListAll = async (params) => {
     throw boom.notFound("No Data Found");
   }
   const result = {
-    message: "List Employee Details",
+    message: "List user Details",
     detail: getList,
   };
   return result;
@@ -322,5 +342,6 @@ module.exports = {
   resetPassword,
   getListAll,
   getUserDetail,
-  updatePassword
+  updatePassword,
+  createStudent
 };
