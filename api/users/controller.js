@@ -185,6 +185,7 @@ const getListAll = async (params) => {
   const paginatedCond = [];
   const limitCond = {};
   const skipCond = {};
+  const roleCond = {};
   if (
     params.search_string &&
     !utilsChecks.isEmptyString(params.search_string) &&
@@ -224,6 +225,22 @@ const getListAll = async (params) => {
     //     },
     // });
   }
+  if (
+    params.type &&
+    !utilsChecks.isEmptyString(params.type) &&
+    !utilsChecks.isNull(params.type)
+  ) {
+    roleCond.$or = [];
+    roleCond.$or.push({
+      $or: [
+        {
+          $and: [
+            { role: { $eq: params.type } },
+          ],
+        },
+      ],
+    });
+  }
   const { sortBy } = params;
   const { sortDir } = params;
   if (!utilsChecks.isNull(sortBy) && !utilsChecks.isEmptyString(sortBy)) {
@@ -250,6 +267,7 @@ const getListAll = async (params) => {
     sortCondition: sortCond,
     paginatedCondition: paginatedCond,
     search_string: params.search_string,
+    roleCond: roleCond
   };
   // return facetParams
   const getList = await service.list(facetParams);

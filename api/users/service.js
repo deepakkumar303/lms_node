@@ -104,6 +104,9 @@ const list = async (params) => {
       $match: params.matchCondition2,
     },
     {
+      $match: params.roleCond,
+    },
+    {
       $lookup: {
         from: "purchasedEvent",
         let: {
