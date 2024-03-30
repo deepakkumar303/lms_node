@@ -4,17 +4,15 @@ const { Schema, mongoose } = require("mongoose");
 //     dbConn,
 // } = require('../../system/db/mongo');
 
-const batchSchema = new Schema(
+const batchStaffSchema = new Schema(
   {
     _id: {
       type: Schema.ObjectId,
       auto: true,
     },
+    batch_staff_id: { type: String },
     batch_id: { type: String },
-    batch_name: { type: String },
-    batch_description: { type: String },
-    date_of_start: { type: Date },
-    date_of_end: { type: Date },
+    staff_id: { type: String },
     is_active: { type: Boolean },
   },
   {
@@ -22,6 +20,6 @@ const batchSchema = new Schema(
   }
 );
 
-const Batch = mongoose.model("Batch", batchSchema, "batch");
+const BatchStaff = mongoose.model("BatchStaff", batchStaffSchema, "batchStaff");
 
-module.exports = Batch;
+module.exports = BatchStaff;

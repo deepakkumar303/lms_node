@@ -6,89 +6,55 @@ const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require('uuid');
 
 const service = require("./service");
-const CourseTopic = require("./index");
+const Batch = require("./index");
 const utilsChecks = require("../../system/utils/checks");
 require("dotenv").config();
 
 const { ObjectId } = mongoose.Types;
 
-const add = async (params) => {
-  params.course_topic_id = uuidv4();
-  const details = await service.create(params);
+const add = async (params, body) => {
+  body.batch_multi.forEach(element => {
+    element.batch_staff_id = uuidv4();
+    element.batch_id = params.batch_id;    
+  });
+  const details = await service.createMany(body.batch_multi);
   const result = {
     detail: { details },
-    message: "Topic added successfully.",
+    message: "added successfully.",
   };
   return result;
 };
 
-const update = async (params, body) => {
-  const details = await service.update(params, body);
+const getDetail = async (params) => {
+  const reqParams = {
+    batch_staff_id: params.batch_staff_id,
+  };
+  const userDetail = await service.getDetail(reqParams);
+  const result = {
+    detail: userDetail,
+    message: "Batch Details",
+  };
+  return result;
+};
+
+const updateBatch = async (params, body) => {
+  // return {params, body};
+  const detail = await service.update(params, body);
   const result = {
     // detail: userDetail,
-    message: "Topic updated successfully.",
+    message: "Batch update successfully.",
   };
   return result;
-};
-
-
-const addMulti = async (params, body) => {
-  // return {body, params}
-  body.course_topic_multi.forEach(element => {
-    element.course_topic_id = uuidv4();
-    element.course_id = params.course_id;
-
-    
-  });
-  // return {body, params}
-  // params.course_topic_id = uuidv4();
-  const details = await service.createMany(body.course_topic_multi);
-  const result = {
-    detail: { details },
-    message: "Topic added successfully.",
-  };
-  return result;
-};
-
-const courseTopicDelete = async (params) => {
-  const reqParams = {
-    course_topic_id: params.course_topic_id,
-  }
-  const userDetail = await service.getDetail(reqParams);
-  if(userDetail.length === 0) {
-    throw boom.conflict("No data found");
-  }
-  await CourseTopic.findOneAndDelete({
-    course_topic_id: params.course_topic_id,
-  });
-  return {
-    message: "Topic Successfully Deleted",
-  };
 };
 
 const getListAll = async (params) => {
+  const matchCond1 = {};
   const matchCond2 = {};
   const sortCond = {};
   const paginatedCond = [];
   const limitCond = {};
   const skipCond = {};
-  const courseTypeCond = {};
-  if (
-    params.course_type &&
-    !utilsChecks.isEmptyString(params.course_type) &&
-    !utilsChecks.isNull(params.course_type)
-  ) {
-    courseTypeCond.$or = [];
-    courseTypeCond.$or.push({
-      $or: [
-        {
-          $and: [
-            { course_id: { $eq: params.course_type } },
-          ],
-        },
-      ],
-    });
-  }
+  const roleCond = {};
   if (
     params.search_string &&
     !utilsChecks.isEmptyString(params.search_string) &&
@@ -96,16 +62,52 @@ const getListAll = async (params) => {
   ) {
     matchCond2.$or = [];
     matchCond2.$or.push({
-      topic_name: {
+      name: {
         $regex: params.search_string,
         $options: "i",
       },
     });
     matchCond2.$or.push({
-      topic_description: {
+      mobile: {
         $regex: params.search_string,
         $options: "i",
       },
+    });
+    matchCond2.$or.push({
+      address: {
+        $elemMatch: {
+          $regex: params.search_string,
+          $options: "i",
+        },
+      },
+    });
+    matchCond2.$or.push({
+      email: {
+        $regex: params.search_string,
+        $options: "i",
+      },
+    });
+    // matchCond2.$or.push({
+    //     'contact_bidders.bidder_name': {
+    //         $regex: params.search_string,
+    //         $options: 'i',
+    //     },
+    // });
+  }
+  if (
+    params.type &&
+    !utilsChecks.isEmptyString(params.type) &&
+    !utilsChecks.isNull(params.type)
+  ) {
+    roleCond.$or = [];
+    roleCond.$or.push({
+      $or: [
+        {
+          $and: [
+            { role: { $eq: params.type } },
+          ],
+        },
+      ],
     });
   }
   const { sortBy } = params;
@@ -129,11 +131,12 @@ const getListAll = async (params) => {
     paginatedCond.push(limitCond);
   }
   const facetParams = {
+    matchCondition1: matchCond1,
     matchCondition2: matchCond2,
     sortCondition: sortCond,
     paginatedCondition: paginatedCond,
     search_string: params.search_string,
-    courseTypeCond: courseTypeCond
+    roleCond: roleCond
   };
   // return facetParams
   const getList = await service.list(facetParams);
@@ -141,17 +144,31 @@ const getListAll = async (params) => {
     throw boom.notFound("No Data Found");
   }
   const result = {
-    message: "List Course Type Details",
+    message: "List user Details",
     detail: getList,
   };
   return result;
 };
 
-
+const batchDelete = async (params) => {
+  const reqParams = {
+    batch_staff_id: params.batch_staff_id,
+  }
+  const detail = await service.getDetail(reqParams);
+  if(detail.length === 0) {
+    throw boom.conflict("No data found");
+  }
+  await Batch.findOneAndDelete({
+    batch_staff_id: params.batch_staff_id,
+  });
+  return {
+    message: "Batch Successfully Deleted",
+  };
+};
 module.exports = {
   add,
-  update,
-  addMulti,
-  courseTopicDelete,
+  updateBatch,
+  getDetail,
   getListAll,
+  batchDelete
 };

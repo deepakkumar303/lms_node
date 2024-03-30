@@ -8,28 +8,32 @@ module.exports.options = {
 
 module.exports.create = {
   body: joi.object().keys({
-    batch_name: joi.string().required(),
-    batch_description: joi.string().required(),
-    date_of_start: joi.date().iso().required(),
-    date_of_end: joi.date().iso().required(),
+    batch_multi: joi.array().items(
+      joi.object({
+        is_active: joi.boolean().required(),
+        student_id: joi.string().allow(null, "").required(),
+      })
+    ),
   }),
+  params: {
+    batch_id: joi.string().required(),
+  },
 };
 
 module.exports.updateSchema = {
   body: joi.object().keys({
-    batch_name: joi.string().required(),
-    batch_description: joi.string().required(),
-    date_of_start: joi.date().iso().required(),
-    date_of_end: joi.date().iso().required(),
+    batch_id: joi.string().required(),
+    is_active: joi.boolean().required(),
+    student_id: joi.string().allow(null, "").required(),
   }),
   params: {
-    batch_id: joi.string().allow(null, "").required(),
+    batch__student_id: joi.string().allow(null, "").required(),
   },
 };
 
 module.exports.detailSchema = {
   params: {
-    batch_id: joi.string().allow(null, "").required(),
+    batch__student_id: joi.string().allow(null, "").required(),
   },
 };
 
@@ -45,6 +49,6 @@ module.exports.getAllByParams = {
 
 module.exports.deleteSchema = {
   body: {
-    batch_id: joi.string().required(),
+    batch__student_id: joi.string().required(),
   },
 };
