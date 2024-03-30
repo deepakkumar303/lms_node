@@ -26,7 +26,7 @@ const update = async (params, body) => {
   const details = await service.update(params, body);
   const result = {
     // detail: userDetail,
-    message: "Course updated successfully.",
+    message: "Course Topic updated successfully.",
   };
   return result;
 };

@@ -14,6 +14,7 @@ const courseTopicSchema = new Schema(
     course_topic_id: { type: String },
     topic_name: { type: String },
     topic_duration: { type: String },
+    topic_duration_type: { type: String },
     topic_description: { type: String },
     material_url: { type: String },
     video_url: { type: String },

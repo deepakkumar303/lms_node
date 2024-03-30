@@ -11,6 +11,7 @@ module.exports.add = {
     course_id: joi.string().required(),
     topic_name: joi.string().required(),
     topic_duration: joi.string().required(),
+    topic_duration_type: joi.string().required(),
     topic_description: joi.string().required(),
     material_url: joi.string().required(),
     video_url: joi.string().required(),
@@ -22,6 +23,7 @@ module.exports.updateSchema = {
     course_id: joi.string().required(),
     topic_name: joi.string().required(),
     topic_duration: joi.string().required(),
+    topic_duration_type: joi.string().required(),
     topic_description: joi.string().required(),
     material_url: joi.string().required(),
     video_url: joi.string().required(),
@@ -37,6 +39,7 @@ module.exports.addMultiSchema = {
       joi.object({
         topic_name: joi.string().required(),
         topic_duration: joi.string().required(),
+        topic_duration_type: joi.string().required(),
         topic_description: joi.string().required(),
         material_url: joi.string().uri().required(),
         video_url: joi.string().uri().required(),
