@@ -80,6 +80,19 @@ const getDetail = async (params) => {
       },
     },
     {
+      $addFields: {
+        total_staff_active_count: {
+          $sum: {
+            $map: {
+              input: "$staff_batch_detail",
+              as: "detail",
+              in: "$$detail.active_count"
+            }
+          }
+        }
+      }
+    },
+    {
       $lookup: {
         from: "batchStudent",
         let: {
@@ -96,6 +109,11 @@ const getDetail = async (params) => {
                 ],
               },
             },
+          },
+          {
+            $addFields: {
+              active_count: { $cond: { if: "$is_active", then: 1, else: 0 } }
+            }
           },
           {
             $lookup: {
@@ -128,33 +146,19 @@ const getDetail = async (params) => {
         as: "student_batch_detail",
       },
     },
-    // {
-    //   $lookup: {
-    //     from: "users",
-    //     let: {
-    //       userId: "$user_id",
-    //     },
-    //     pipeline: [
-    //       {
-    //         $match: {
-    //           $expr: {
-    //             $and: [
-    //               {
-    //                 $in: ["$user_id", "$$userId"],
-    //               },
-    //             ],
-    //           },
-    //         },
-    //       },
-    //       {
-    //         $project: {
-    //           password: 0,
-    //         },
-    //       },
-    //     ],
-    //     as: "student_detail",
-    //   },
-    // },
+    {
+      $addFields: {
+        total_student_active_count: {
+          $sum: {
+            $map: {
+              input: "$student_batch_detail",
+              as: "detail",
+              in: "$$detail.active_count"
+            }
+          }
+        }
+      }
+    },
   ]);
   return result;
 };
@@ -172,9 +176,9 @@ const list = async (params) => {
     },
     {
       $lookup: {
-        from: "users",
+        from: "batchStaff",
         let: {
-          staffId: "$staff_id",
+          batchId: "$batch_id",
         },
         pipeline: [
           {
@@ -182,26 +186,66 @@ const list = async (params) => {
               $expr: {
                 $and: [
                   {
-                    $in: ["$user_id", "$$staffId"],
+                    $eq: ["$batch_id", "$$batchId"],
                   },
                 ],
               },
             },
           },
           {
-            $project: {
-              password: 0,
+            $addFields: {
+              active_count: { $cond: { if: "$is_active", then: 1, else: 0 } }
+            }
+          },
+          {
+            $lookup: {
+              from: "users",
+              let: {
+                userId: "$staff_id",
+              },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        {
+                          $eq: ["$user_id", "$$userId"],
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  $project: {
+                    password: 0
+                  }
+                }
+              ],
+              as: "staff_detail",
             },
           },
         ],
-        as: "staff_detail",
+        as: "staff_batch_detail",
       },
     },
     {
+      $addFields: {
+        total_staff_active_count: {
+          $sum: {
+            $map: {
+              input: "$staff_batch_detail",
+              as: "detail",
+              in: "$$detail.active_count"
+            }
+          }
+        }
+      }
+    },
+    {
       $lookup: {
-        from: "users",
+        from: "batchStudent",
         let: {
-          userId: "$user_id",
+          batchId: "$batch_id",
         },
         pipeline: [
           {
@@ -209,20 +253,60 @@ const list = async (params) => {
               $expr: {
                 $and: [
                   {
-                    $in: ["$user_id", "$$userId"],
+                    $eq: ["$batch_id", "$$batchId"],
                   },
                 ],
               },
             },
           },
           {
-            $project: {
-              password: 0,
+            $addFields: {
+              active_count: { $cond: { if: "$is_active", then: 1, else: 0 } }
+            }
+          },
+          {
+            $lookup: {
+              from: "users",
+              let: {
+                userId: "$student_id",
+              },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        {
+                          $eq: ["$user_id", "$$userId"],
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  $project: {
+                    password: 0
+                  }
+                }
+              ],
+              as: "student_detail",
             },
           },
         ],
-        as: "student_detail",
+        as: "student_batch_detail",
       },
+    },
+    {
+      $addFields: {
+        total_student_active_count: {
+          $sum: {
+            $map: {
+              input: "$student_batch_detail",
+              as: "detail",
+              in: "$$detail.active_count"
+            }
+          }
+        }
+      }
     },
     {
       $sort: params.sortCondition,
