@@ -11,6 +11,7 @@ module.exports.create = {
     batch_name: joi.string().required(),
     batch_description: joi.string().required(),
     type: joi.string().required(),
+    duration: joi.string().required(),
     date_of_start: joi.date().iso().required(),
     date_of_end: joi.date().iso().required(),
     start_time: joi.date().iso().required(),
@@ -22,6 +23,7 @@ module.exports.updateSchema = {
   body: joi.object().keys({
     batch_name: joi.string().required(),
     batch_description: joi.string().required(),
+    duration: joi.string().required(),
     date_of_start: joi.date().iso().required(),
     date_of_end: joi.date().iso().required(),
     start_time: joi.date().iso().required(),

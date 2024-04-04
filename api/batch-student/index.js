@@ -10,7 +10,7 @@ const batchUserSchema = new Schema(
       type: Schema.ObjectId,
       auto: true,
     },
-    batch__student_id: { type: String },
+    batch_student_id: { type: String },
     batch_id: { type: String },
     student_id: { type: String },
     is_active: { type: Boolean },

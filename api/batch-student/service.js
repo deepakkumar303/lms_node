@@ -14,7 +14,7 @@ const create = async (params) => {
 
 const update = async (params, body) => {
   const newBatch = await Batch.findOneAndUpdate(
-    { batch__student_id: params.batch__student_id },
+    { batch_student_id: params.batch_student_id },
     body
   );
   return newBatch;
@@ -24,8 +24,8 @@ const getDetail = async (params) => {
   const result = await Batch.aggregate([
     {
       $match: {
-        batch__student_id: {
-          $eq: params.batch__student_id,
+        batch_student_id: {
+          $eq: params.batch_student_id,
         },
       },
     },

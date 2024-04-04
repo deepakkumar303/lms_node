@@ -27,13 +27,13 @@ module.exports.updateSchema = {
     student_id: joi.string().allow(null, "").required(),
   }),
   params: {
-    batch__student_id: joi.string().allow(null, "").required(),
+    batch_student_id: joi.string().allow(null, "").required(),
   },
 };
 
 module.exports.detailSchema = {
   params: {
-    batch__student_id: joi.string().allow(null, "").required(),
+    batch_student_id: joi.string().allow(null, "").required(),
   },
 };
 
@@ -49,6 +49,6 @@ module.exports.getAllByParams = {
 
 module.exports.deleteSchema = {
   body: {
-    batch__student_id: joi.string().required(),
+    batch_student_id: joi.string().required(),
   },
 };

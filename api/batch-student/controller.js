@@ -14,7 +14,7 @@ const { ObjectId } = mongoose.Types;
 
 const add = async (params, body) => {
   body.batch_multi.forEach(element => {
-    element.batch__student_id = uuidv4();
+    element.batch_student_id = uuidv4();
     element.batch_id = params.batch_id;    
   });
   const details = await service.createMany(body.batch_multi);
@@ -27,7 +27,7 @@ const add = async (params, body) => {
 
 const getDetail = async (params) => {
   const reqParams = {
-    batch__student_id: params.batch__student_id,
+    batch_student_id: params.batch_student_id,
   };
   const userDetail = await service.getDetail(reqParams);
   const result = {
@@ -152,14 +152,14 @@ const getListAll = async (params) => {
 
 const batchDelete = async (params) => {
   const reqParams = {
-    batch__student_id: params.batch__student_id,
+    batch_student_id: params.batch_student_id,
   }
   const detail = await service.getDetail(reqParams);
   if(detail.length === 0) {
     throw boom.conflict("No data found");
   }
   await Batch.findOneAndDelete({
-    batch__student_id: params.batch__student_id,
+    batch_student_id: params.batch_student_id,
   });
   return {
     message: "Batch Successfully Deleted",

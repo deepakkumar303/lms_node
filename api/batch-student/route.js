@@ -20,14 +20,14 @@ router.post(
 );
 
 router.put(
-  "/update/:batch__student_id",
+  "/update/:batch_student_id",
   authenticateAdminJWT,
   celebrate(schema.updateSchema, schema.options),
   c(controller.updateBatch, (req, res, next) => [req.params, req.body])
 );
 
 router.get(
-  "/detail/:batch__student_id",
+  "/detail/:batch_student_id",
   authenticateAdminJWT,
   celebrate(schema.detailSchema, schema.options),
   c(controller.getDetail, (req, res, next) => [req.params])
