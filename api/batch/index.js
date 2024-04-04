@@ -14,6 +14,7 @@ const batchSchema = new Schema(
     batch_name: { type: String },
     batch_description: { type: String },
     duration: { type: String },
+    duration_type: { type: String },
     type: { type: String },
     start_time: { type: Date },
     end_time: { type: Date },
