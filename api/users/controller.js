@@ -8,6 +8,7 @@ const { v4: uuidv4 } = require('uuid');
 const service = require("./service");
 const User = require("./index");
 const utilsChecks = require("../../system/utils/checks");
+const { generateStudentUniqueNumber, generateStafUniqueNumber } = require("../../system/utils/common-utils");
 require("dotenv").config();
 
 const { ObjectId } = mongoose.Types;
@@ -34,6 +35,7 @@ const register = async (params) => {
   params.password = hashedPassword;
   params.is_active = true;
   params.user_id = uuidv4();
+  params.unique_id = params.role === 'student' ? generateStudentUniqueNumber() : generateStafUniqueNumber();
 
   const createUser = await service.create(params);
   const result = {
@@ -54,6 +56,7 @@ const createStudent = async (params) => {
   params.password = hashedPassword;
   params.is_active = true;
   params.user_id = uuidv4();
+  params.unique_id = params.role === 'student' ? generateStudentUniqueNumber() : generateStafUniqueNumber();
 
   const createUser = await service.create(params);
   const result = {
@@ -64,6 +67,17 @@ const createStudent = async (params) => {
 };
 
 const updateUser = async (params, body) => {
+  // const userCheckDetail = await User.find({ email: body.email });
+  // console.log('userCheckDetail', userCheckDetail);
+  // console.log('body', body);
+
+  // if (userCheckDetail.length > 0) {
+  //   if(params.user_id !== userCheckDetail[0].user_id) {
+  //     throw boom.conflict("unable to update");
+  //   }    
+  // } else {
+  //   throw boom.conflict("unable to update");
+  // }
   const userDetail = await service.update(params, body);
   const result = {
     // detail: userDetail,

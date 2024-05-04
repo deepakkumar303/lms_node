@@ -11,6 +11,7 @@ const userSchema = new Schema(
       auto: true,
     },
     user_id: { type: String },
+    unique_id: { type: String },
     first_name: { type: String },
     password: { type: String },
     last_name: { type: String },

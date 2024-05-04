@@ -52,7 +52,7 @@ module.exports.createStudent = {
     courses :joi.array().items(courseSchema),
     email: joi.string().email().required(),
     mobile: joi.number().required(),
-    alternate_mobile: joi.number().required(),
+    alternate_mobile: joi.number().optional(),
     role: joi.string().required(),
     location: joi
       .object({
@@ -75,9 +75,9 @@ module.exports.updateSchema = {
     last_name: joi.string().required(),
     dob: joi.date().iso().required(),
     courses :joi.array().items(courseSchema),
-    email: joi.string().email().required(),
+    // email: joi.string().email().required(),
     mobile: joi.number().required(),
-    alternate_mobile: joi.number().required(),
+    alternate_mobile: joi.number().optional(),
     role: joi.string().required(),
     location: joi
       .object({
