@@ -112,6 +112,18 @@ const getListAll = async (params) => {
   return result;
 };
 
+const courseListByCategory = async (params) => {
+  const getList = await service.courseListByCategory(params);
+  if (!utilsChecks.isArray(getList) || utilsChecks.isEmptyArray(getList)) {
+    throw boom.notFound("No Data Found");
+  }
+  const result = {
+    message: "List Course Details",
+    detail: getList,
+  };
+  return result;
+};
+
 const courseDelete = async (params) => {
   const reqParams = {
     course_id: params.course_id,
@@ -132,5 +144,6 @@ module.exports = {
   add,
   update,
   getListAll,
-  courseDelete
+  courseDelete,
+  courseListByCategory
 };

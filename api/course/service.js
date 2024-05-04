@@ -82,6 +82,19 @@ const list = async (params) => {
   return result;
 };
 
+const courseListByCategory = async (params) => {
+  const result = await Course.aggregate([
+    {
+      $match: {
+        category_id: {
+          $eq: params.category_id,
+        },
+      },
+    },
+  ]);
+  return result;
+};
+
 const getDetail = async (params) => {
   const result = await Course.aggregate([
     {
@@ -99,5 +112,6 @@ module.exports = {
   create,
   update,
   list,
-  getDetail
+  getDetail,
+  courseListByCategory
 };

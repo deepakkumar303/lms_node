@@ -60,6 +60,12 @@ module.exports.getAllByParams = {
   },
 };
 
+module.exports.courseListByCategory = {
+  query: {
+    category_id: joi.string().allow(null, "").required(),
+  },
+};
+
 module.exports.deleteSchema = {
   body: {
     course_id: joi.string().required(),

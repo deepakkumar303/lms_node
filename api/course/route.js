@@ -31,6 +31,13 @@ router.get(
   c(controller.getListAll, (req, res, next) => [req.query])
 );
 
+router.get(
+  "/course-list-by-category",
+  authenticateAdminJWT,
+  celebrate(schema.courseListByCategory, schema.options),
+  c(controller.courseListByCategory, (req, res, next) => [req.query])
+);
+
 router.delete(
   "/delete",
   authenticateAdminJWT,

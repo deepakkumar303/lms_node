@@ -27,15 +27,7 @@ const userSchema = new Schema(
       country: { type: String },
       pin_code: { type: String },
     },
-    courses: [
-      {
-        course_id: { type: Schema.ObjectId },
-        course_name: { type: String },
-        course_mode: { type: String },
-        course_type: { type: String },
-        course_time: { type: Date },
-      },
-    ],
+    courses: [],
     doj: { type: Date },
     dol: { type: Date },
     is_active: { type: "Boolean" },

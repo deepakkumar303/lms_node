@@ -147,6 +147,50 @@ const getDetail = async (params) => {
       },
     },
     {
+      $lookup: {
+        from: "category",
+        let: {
+          categoryId: "$category_id",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: ["$category_id", "$$categoryId"],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        as: "category_detail",
+      },
+    },
+    {
+      $lookup: {
+        from: "course",
+        let: {
+          courseId: "$course_id",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: ["$course_id", "$$courseId"],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        as: "course_detail",
+      },
+    },
+    {
       $addFields: {
         total_student_active_count: {
           $sum: {

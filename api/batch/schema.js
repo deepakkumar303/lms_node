@@ -9,6 +9,8 @@ module.exports.options = {
 module.exports.create = {
   body: joi.object().keys({
     batch_name: joi.string().required(),
+    category_id: joi.string().required(),
+    course_id: joi.string().required(),
     batch_description: joi.string().required(),
     type: joi.string().required(),
     duration: joi.string().required(),
@@ -22,6 +24,8 @@ module.exports.create = {
 
 module.exports.updateSchema = {
   body: joi.object().keys({
+    category_id: joi.string().required(),
+    course_id: joi.string().required(),
     batch_name: joi.string().required(),
     batch_description: joi.string().required(),
     duration_type: joi.string().required(),

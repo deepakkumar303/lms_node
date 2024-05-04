@@ -332,7 +332,7 @@ const list = async (params) => {
 };
 
 const fetchDetails = async (params) => {
-  const userDetails = await User.find({ _id: params.user_id });
+  const userDetails = await User.find({ user_id: params.user_id });
   return userDetails;
 };
 

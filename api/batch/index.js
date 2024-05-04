@@ -11,6 +11,8 @@ const batchSchema = new Schema(
       auto: true,
     },
     batch_id: { type: String },
+    category_id: { type: String },
+    course_id: { type: String },
     batch_name: { type: String },
     batch_description: { type: String },
     duration: { type: String },
