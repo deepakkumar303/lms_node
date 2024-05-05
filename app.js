@@ -13,6 +13,7 @@ const categoryRoutes = require("./api/category/route");
 const batchRoutes = require("./api/batch/route");
 const batchStudentRoutes = require("./api/batch-student/route");
 const batchStaffRoutes = require("./api/batch-staff/route");
+const attendanceRoutes = require("./api/attendance/route");
 const cors = require("cors");
 
 const axios = require("axios");
@@ -112,6 +113,7 @@ app.use("/api/category", categoryRoutes);
 app.use("/api/batch", batchRoutes);
 app.use("/api/batch-student", batchStudentRoutes);
 app.use("/api/batch-staff", batchStaffRoutes);
+app.use("/api/attendance", attendanceRoutes);
 
 app.use((req, res, next) => {
   // throw boom.notFound("Endpoint Not Found");
