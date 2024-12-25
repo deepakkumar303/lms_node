@@ -26,14 +26,14 @@ router.put(
 
 router.get(
   "/list",
-  authenticateAdminJWT,
+  // authenticateAdminJWT,
   celebrate(schema.getAllByParams, schema.options),
   c(controller.getListAll, (req, res, next) => [req.query])
 );
 
 router.get(
   "/course-list-by-category",
-  authenticateAdminJWT,
+  // authenticateAdminJWT,
   celebrate(schema.courseListByCategory, schema.options),
   c(controller.courseListByCategory, (req, res, next) => [req.query])
 );

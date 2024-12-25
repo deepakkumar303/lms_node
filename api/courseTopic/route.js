@@ -40,7 +40,7 @@ router.delete(
 
 router.get(
   "/list",
-  authenticateAdminJWT,
+  // authenticateAdminJWT,
   celebrate(schema.getAllByParams, schema.options),
   c(controller.getListAll, (req, res, next) => [req.query])
 );
